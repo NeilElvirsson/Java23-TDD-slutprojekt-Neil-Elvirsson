@@ -44,8 +44,6 @@ class ATMTest {
     void testInsertCard_WhenCardIsNotFrozen_CardIsInserted() {
         // Förberedelse: kortet är inte fryst
         when(bankService.isCardFrozen(anyString())).thenReturn(false);
-
-        // Sätt in kortet
         atm.insertCard(card);
 
         // Verifiera att kortet har satts in korrekt
@@ -72,9 +70,6 @@ class ATMTest {
 
         when(bankService.validatePin(anyString(), eq("wrongPin"))).thenReturn(false);
 
-        // Simulera en "stateful" räknare manuellt i testet
-        when(card.getFailedAttempts()).thenReturn(0, 1, 2); // Simulera ökning av misslyckade försök
-
         doAnswer(invocation -> {
             // Simulera incrementering av försök
             int attempts = card.getFailedAttempts();
@@ -83,11 +78,10 @@ class ATMTest {
         }).when(card).incrementFailedAttempts();
 
         atm.insertCard(card);
-
         // Testa autentisering tre gånger
-        atm.authenticatePin("wrongPin"); // 1:a försöket
-        atm.authenticatePin("wrongPin"); // 2:a försöket
-        assertThrows(SecurityException.class, () -> atm.authenticatePin("wrongPin")); // 3:e försöket som låser kortet
+        atm.authenticatePin("wrongPin");
+        atm.authenticatePin("wrongPin");
+        assertThrows(SecurityException.class, () -> atm.authenticatePin("wrongPin"));
 
         // Verifiera att incrementFailedAttempts anropades tre gånger
         verify(card, times(3)).incrementFailedAttempts();

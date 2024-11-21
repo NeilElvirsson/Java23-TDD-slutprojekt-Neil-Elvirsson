@@ -14,8 +14,7 @@ public class Card {
     }
 
     private String hashPin(String pinCode) {
-        // Placeholder för PIN-hashning. För riktiga system bör du använda en säker hash-algoritm.
-        return pinCode; // För enkelhetens skull
+        return pinCode; 
     }
 
     public String getCardId() {
@@ -34,29 +33,10 @@ public class Card {
         this.failedAttempts++;
     }
 
-    public void setFailedAttempts(int attempts) {
-
-        this.failedAttempts = attempts;
-    }
 
     public void resetFailedAttempts() {
 
         this.failedAttempts = 0;
-    }
-
-    public boolean isLocked() {
-
-        return locked;
-    }
-
-    public void lockCard() {
-
-        this.locked = true;
-    }
-
-    public boolean verifyPin(String pinCode) {
-
-        return hashedPinCode.equals(hashPin(pinCode));
     }
 
 
